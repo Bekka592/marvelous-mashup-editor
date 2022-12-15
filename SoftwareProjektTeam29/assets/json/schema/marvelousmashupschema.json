@@ -1,0 +1,1121 @@
+{
+  "$schema":"http://json-schema.org/draft-07/schema#",
+  "definitions":{
+    "oneCharacter":{
+      "type":"object",
+      "properties":{
+        "name":{
+          "type":"string",
+          "title":"charakterName",
+          "description":"Der Name des Charakters"
+        },
+        "HP":{
+          "type":"integer",
+          "title":"healtPoints",
+          "description":"Die Anzahl der Lebenspunkte des Charakters"
+        },
+        "MP":{
+          "type":"integer",
+          "title":"movementPoints",
+          "description":"Die Anzahl der Bewegungspunkte des Charakters"
+        },
+        "AP":{
+          "type":"integer",
+          "title":"actionPoints",
+          "description":"Die Anzahl der Aktionspunkte des Charakters"
+        },
+        "meleeDamage":{
+          "type":"integer",
+          "title":"meeleDamage",
+          "description":"Der Nahkampfschaden des Charakters"
+        },
+        "rangeCombatDamage":{
+          "type":"integer",
+          "title":"rangeCombatDamage",
+          "description":"Der Fernkampfschaden des Charakters"
+        },
+        "rangeCombatReach":{
+          "type":"integer",
+          "title":"rangeCombatReach",
+          "description":"Die Reichweite des Fernkampfschadens des Charakters"
+        }
+      },
+      "required":[
+        "name",
+        "HP",
+        "MP",
+        "AP",
+        "meleeDamage",
+        "rangeCombatDamage",
+        "rangeCombatReach"
+      ]
+    },
+    "matchconfig":{
+      "title":"Partiekonfiguration",
+      "description":"A Gameconfiguration to play a game of Marvelous Mashup.",
+      "type":"object",
+      "properties":{
+        "maxRounds":{
+          "description":"Maximum amount of rounds played until Thanos appears. Using 0 will result in Thanos never appearing. Example: maxRounds=5 -> Thanos will appear at the start of round 5.",
+          "type":"integer"
+        },
+        "maxRoundTime":{
+          "description":"Time window in which the player can use/move one of their Heros. Time is measured in seconds, time will not continue during a pause.",
+          "type":"integer"
+        },
+        "maxGameTime":{
+          "description":"Optional: Maximum time to play the game, once the time runs out Thanos will spawn in the following round. Using 0 will result in no Time limit. Time is measured in seconds.",
+          "type":"integer"
+        },
+        "maxAnimationTime":{
+          "description":"Maximum time until the animation is done. Using 0 will result in no time limit. Time is measured in seconds.",
+          "type":"integer"
+        },
+        "spaceStoneCD":{
+          "description":"Cooldown for Space Stone. Cooldown measured in rounds.",
+          "type":"integer"
+        },
+        "mindStoneCD":{
+          "description":"Cooldown for Mind Stone. Cooldown measured in rounds.",
+          "type":"integer"
+        },
+        "realityStoneCD":{
+          "description":"Cooldown for Reality Stone. Cooldown measured in rounds.",
+          "type":"integer"
+        },
+        "powerStoneCD":{
+          "description":"Cooldown for Power Stone. Cooldown measured in rounds.",
+          "type":"integer"
+        },
+        "timeStoneCD":{
+          "description":"Cooldown for Time Stone. Cooldown measured in rounds.",
+          "type":"integer"
+        },
+        "soulStoneCD":{
+          "description":"Cooldown for Soul Stone. Cooldown measured in rounds.",
+          "type":"integer"
+        },
+        "mindStoneDMG":{
+          "description":"Damage Value of Mind Stone.",
+          "type":"integer"
+        },
+        "maxPauseTime":{
+          "description":"Timelimit for a pause. A disconnect from the game will result in a pause. Using 0 means no pauses are allowed. Time is measured in seconds.",
+          "type":"integer"
+        },
+        "maxResponseTime":{
+          "description":"Duration the Server waits for a Response of a Client before a Timeout. Based on Usage of keep-alives.",
+          "type":"integer"
+        }
+      },
+      "required":[
+        "maxRounds",
+        "maxRoundTime",
+        "maxAnimationTime",
+        "spaceStoneCD",
+        "mindStoneCD",
+        "realityStoneCD",
+        "powerStoneCD",
+        "timeStoneCD",
+        "soulStoneCD",
+        "mindStoneDMG",
+        "maxPauseTime",
+        "maxResponseTime"
+      ],
+      "additionalProperties": false
+    },
+    "scenarioconfig":{
+      "type":"object",
+      "title":"The scenarioconfiguration",
+      "description":"JSON-Schema for the scenarioconfiguration",
+      "properties":{
+        "scenario":{
+          "$id":"#/properties/scenario",
+          "title":"The scenario scheme",
+          "description":"Two dimensional array of fields.",
+          "type":"array",
+          "minItems":1,
+          "items":{
+            "$id":"#/properties/scenario/items",
+            "title":"The rows of the gamefield",
+            "description":"Contains a onedimensional array for each row.",
+            "type":"array",
+            "minItems":0,
+            "items":{
+              "$id":"#/properties/scenario/items/items",
+              "type":"string",
+              "title":"the columns of the gamefield",
+              "description":"every column in this row descripes the type of a field",
+              "enum":[
+                "GRASS",
+                "ROCK",
+		"PORTAL"
+              ]
+            }
+          }
+        },
+        "name":{
+          "$id":"#/properties/scenariotitle",
+          "title":"The scenario name",
+          "description":"name of the scenario",
+          "type":"string"
+        },
+        "author":{
+          "$id":"#/properties/author",
+          "title":"Name of the author",
+          "description":"Name of the author",
+          "type":"string"
+        }
+      },
+      "required":[
+        "scenario",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "event":{
+      "type":"object",
+      "oneOf": [
+        {
+          "type":"object",
+          "properties":{
+            "eventType":{
+              "const":"Ack"
+            }
+          },
+          "required":[
+            "eventType"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type":"object",
+          "properties":{
+            "eventType":{
+              "const":"Nack"
+            }
+          },
+          "required":[
+            "eventType"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type":"object",
+          "properties":{
+            "eventType":{
+              "const":"GamestateEvent"
+            },
+            "entities": {
+              "description": "Entities on the map",
+              "type": "array",
+              "items": {
+                "description": "Entities as defined in the 'Entities' section",
+                "type": "object",
+                "properties": {
+                  "entityType": { "type": "string", "enum": [ "Character", "InfinityStone", "Rock" ] },
+                  "PID": { "type": "integer" },
+                  "ID": { "type": "integer" },
+                  "name": { "type": "string" },
+                  "HP": { "type": "integer" },
+                  "MP": { "type": "integer" },
+                  "AP": { "type": "integer" },
+                  "stones": {
+                    "type": "array",
+                    "items":{"type": "integer", "maximum": 5, "minimum": 0},
+                    "uniqueItems": true,
+                    "maxItems": 6
+                  },
+                  "position": {
+                    "type": "array",
+                    "items": { "type": "integer" , "minimum": 0 },
+                    "maxItems": 2,
+                    "minItems": 2
+                  }
+                },
+                "required": ["entityType", "ID", "position"]
+              }
+            },
+            "mapSize" : {
+              "type": "array",
+              "items": { "type": "integer", "minimum": 0 } ,
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "turnOrder": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "entityID": {
+                    "type": "string", "enum": ["NPC", "P1", "P2", "Rocks", "InfinityStones"]
+                  },
+                  "ID": {
+                    "type": "integer"
+                  }
+                },
+                "additionalProperties": false,
+                "minProperties": 2
+              }
+            },
+            "activeCharacter": {
+              "type": "object",
+              "properties": {
+                "entityID": {
+                  "type": "string", "enum": ["NPC", "P1", "P2", "Rocks", "InfinityStones"]
+                },
+                "ID": {
+                  "type": "integer"
+                }
+              },
+              "additionalProperties": false,
+              "minProperties": 2
+            },
+            "stoneCooldowns": {
+              "type": "array",
+              "items": { "type": "integer" },
+              "minItems": 6,
+              "maxItems": 6
+            },
+            "winCondition": { "type": "boolean" }
+          },
+          "required": [
+            "eventType",
+            "entities",
+            "mapSize",
+            "turnOrder",
+            "activeCharacter",
+            "stoneCooldowns",
+            "winCondition"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "eventType": { "const": "DestroyedEntityEvent" },
+            "targetField": {
+              "type": "array",
+              "items": {  "type": "integer" },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "targetEntity": {
+              "type": "object",
+              "properties": {
+                "entityID": {
+                  "type": "string", "enum": ["NPC", "P1", "P2", "Rocks", "InfinityStones"]
+                },
+                "ID": {
+                  "type": "integer"
+                }
+              },
+              "additionalProperties": false,
+              "minProperties": 2
+            }
+          },
+          "required": ["eventType", "targetField", "targetEntity"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "eventType": { "const": "HealedEvent" },
+            "targetEntity": {
+              "type": "object",
+              "properties": {
+                "entityID": {
+                  "type": "string", "enum": ["NPC", "P1", "P2", "Rocks", "InfinityStones"]
+                },
+                "ID": {
+                  "type": "integer"
+                }
+              },
+              "additionalProperties": false,
+              "minProperties": 2
+            },
+            "targetField": {
+              "type": "array",
+              "items": { "type": "integer" },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "amount": { "type": "integer" }
+          },
+          "required": ["eventType", "targetEntity", "targetField", "amount"],
+          "additionalProperties": false
+        },
+        {
+          "type":"object",
+          "properties": {
+            "eventType": { "const": "ConsumedAPEvent" },
+            "targetEntity": {
+              "type": "object",
+              "properties": {
+                "entityID": {
+                  "type": "string", "enum": ["NPC", "P1", "P2", "Rocks", "InfinityStones"]
+                },
+                "ID": {
+                  "type": "integer"
+                }
+              },
+              "additionalProperties": false,
+              "minProperties": 2
+            },
+            "targetField": {
+              "type": "array",
+              "items": { "type": "integer" },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "amount": { "type": "integer" }
+          },
+          "required": ["eventType", "targetEntity", "targetField", "amount"],
+          "additionalProperties": false
+        },
+        {
+          "type":"object",
+          "properties": {
+            "eventType": { "const": "ConsumedMPEvent" },
+            "targetEntity": {
+              "type": "object",
+              "properties": {
+                "entityID": {
+                  "type": "string", "enum": ["NPC", "P1", "P2", "Rocks", "InfinityStones"]
+                },
+                "ID": {
+                  "type": "integer"
+                }
+              },
+              "additionalProperties": false,
+              "minProperties": 2
+            },
+            "targetField": {
+              "type": "array",
+              "items": { "type": "integer" },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "amount": { "type": "integer" }
+          },
+          "required": ["eventType", "targetEntity", "targetField", "amount"],
+          "additionalProperties": false
+        },
+        {
+          "type":"object",
+          "properties": {
+            "eventType": { "const": "TakenDamageEvent" },
+            "targetEntity": {
+              "type": "object",
+              "properties": {
+                "entityID": {
+                  "type": "string", "enum": ["NPC", "P1", "P2", "Rocks", "InfinityStones"]
+                },
+                "ID": {
+                  "type": "integer"
+                }
+              },
+              "additionalProperties": false,
+              "minProperties": 2
+            },
+            "targetField": {
+              "type": "array",
+              "items": { "type": "integer" },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "amount": { "type": "integer" }
+          },
+          "required": ["eventType", "targetEntity", "targetField", "amount"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "eventType": { "const": "SpawnEntityEvent" },
+            "entity": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "entityType": { "const": "Rock" },
+                    "HP": { "type": "integer" },
+                    "ID": { "type": "integer" },
+                    "position": {
+                      "type": "array",
+                      "items": { "type": "integer", "minimum": 0},
+                      "minItems": 2,
+                      "maxItems": 2
+                    }
+                  },
+                  "required": ["entityType", "HP", "ID", "position"]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "entityType": { "const": "InfinityStone" },
+                    "ID": { "type": "integer" },
+                    "position": {
+                      "type": "array",
+                      "items": { "type": "integer", "minimum": 0},
+                      "minItems": 2,
+                      "maxItems": 2
+                    }
+                  },
+                  "required": ["entityType", "position"]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "entityType": { "const": "Character" },
+                    "name": { "type": "string" },
+                    "HP": { "type": "integer" },
+                    "MP": { "type": "integer" },
+                    "AP": { "type": "integer" },
+                    "ID": { "type": "integer" },
+                    "PID": { "type": "integer" },
+                    "stones": {
+                      "type": "array",
+                      "items":
+                      {"type": "integer", "maximum": 5, "minimum": 0},
+                      "uniqueItems": true,
+                      "maxItems": 6
+                    },
+                    "position": {
+                      "type": "array",
+                      "items": { "type": "integer", "minimum": 0},
+                      "minItems": 2,
+                      "maxItems": 2
+                    }
+                  },
+                  "required": ["entityType", "name", "HP", "MP", "AP","PID", "ID", "stones", "position"]
+                }
+              ]
+            }
+          },
+          "required": ["eventType", "entity"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "eventType": {
+              "type": "string",
+              "enum": ["MeleeAttackEvent", "RangedAttackEvent", "MoveEvent", "ExchangeInfinityStoneEvent", "UseInfinityStoneEvent"]
+            },
+            "originEntity": {
+              "type": "object",
+              "properties": {
+                "entityID": {
+                  "type": "string", "enum": ["NPC", "P1", "P2", "Rocks", "InfinityStones"]
+                },
+                "ID": {
+                  "type": "integer"
+                }
+              },
+              "additionalProperties": false,
+              "minProperties": 2
+            },
+            "targetEntity": {
+              "type": "object",
+              "properties": {
+                "entityID": {
+                  "type": "string", "enum": ["NPC", "P1", "P2", "Rocks", "InfinityStones"]
+                },
+                "ID": {
+                  "type": "integer"
+                }
+              },
+              "additionalProperties": false,
+              "minProperties": 2
+            },
+            "originField": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "targetField": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "stoneType": {
+              "type": "object",
+              "properties": {
+                "entityID": {
+                  "type": "string", "enum": ["InfinityStones"]
+                },
+                "ID": {
+                  "type": "integer"
+                }
+              },
+              "additionalProperties": false,
+              "minProperties": 2
+            }
+          },
+          "required": ["eventType", "originEntity", "originField", "targetField"]
+        },
+        {
+          "type":"object",
+          "properties":{
+            "eventType":{
+              "const":"TimeoutEvent"
+            },
+            "message": { "type": "string"  }
+          },
+          "required":[
+            "eventType",
+            "message"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type":"object",
+          "properties":{
+            "eventType":{
+              "const":"TimeoutWarningEvent"
+            },
+            "message": { "type": "string"  },
+            "timeLeft": { "type" : "integer"}
+          },
+          "required":[
+            "eventType",
+            "message",
+            "timeLeft"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type":"object",
+          "properties":{
+            "eventType":{
+              "const":"WinEvent"
+            },
+            "playerWon": { "type": "integer" }
+          },
+          "required":[
+            "eventType",
+            "playerWon"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type":"object",
+          "properties":{
+            "eventType":{
+              "const":"RoundSetupEvent"
+            },
+            "roundCount": { "type": "integer" },
+            "characterOrder": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "entityID": {
+                    "type": "string", "enum": ["NPC", "P1", "P2"]
+                  },
+                  "ID": {
+                    "type": "integer"
+                  }
+                },
+                "additionalProperties": false,
+                "minProperties": 2
+              }
+            }
+          },
+          "required":[
+            "eventType",
+            "roundCount",
+            "characterOrder"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type":"object",
+          "properties":{
+            "eventType":{
+              "const":"TurnEvent"
+            },
+            "turnCount": { "type": "integer" },
+            "nextCharacter": {
+              "type": "object",
+              "properties": {
+                "entityID": {
+                  "type": "string", "enum": ["NPC", "P1", "P2"]
+                },
+                "ID": {
+                  "type": "integer"
+                }
+              },
+              "required":[
+                "entityID",
+                "ID"
+              ],
+              "additionalProperties": false
+            }
+
+          },
+          "required":[
+            "eventType"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type":"object",
+          "properties":{
+            "eventType":{
+              "const":"PauseStartEvent"
+            }
+          },
+          "required":[
+            "eventType"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type":"object",
+          "properties":{
+            "eventType":{
+              "const":"PauseStopEvent"
+            }
+          },
+          "required":[
+            "eventType"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type":"object",
+          "properties":{
+            "eventType":{
+              "const":"TurnTimeoutEvent"
+            }
+          },
+          "required":[
+            "eventType"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type":"object",
+          "properties":{
+            "eventType":{
+              "const":"DisconnectEvent"
+            }
+          },
+          "required":[
+            "eventType"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "request":{
+      "type":"object",
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "requestType": {
+              "type": "string",
+              "enum": [
+                "MeleeAttackRequest",
+                "RangedAttackRequest",
+                "MoveRequest",
+                "ExchangeInfinityStoneRequest",
+                "UseInfinityStoneRequest",
+                "PauseStopRequest",
+                "PauseStartRequest",
+                "EndRoundRequest",
+                "DisconnectRequest",
+                "Req"
+              ]
+            },
+            "originEntity": {
+              "type": "object",
+              "properties": {
+                "entityID": {
+                  "type": "string", "enum": ["NPC", "P1", "P2", "Rocks", "InfinityStones"]
+                },
+                "ID": {
+                  "type": "integer"
+                }
+              },
+              "additionalProperties": false,
+              "minProperties": 2
+            },
+            "targetEntity": {
+              "type": "object",
+              "properties": {
+                "entityID": {
+                  "type": "string", "enum": ["NPC", "P1", "P2", "Rocks", "InfinityStones"]
+                },
+                "ID": {
+                  "type": "integer"
+                }
+              },
+              "additionalProperties": false,
+              "minProperties": 2
+            },
+            "originField": {
+              "type": "array",
+              "items": { "type": "number" },
+              "minLength": 2,
+              "maxLength": 2
+            },
+            "targetField": {
+              "type": "array",
+              "items": { "type": "number" },
+              "minLength": 2,
+              "maxLength": 2
+            },
+            "value": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "stoneType": {
+              "type": "object",
+              "properties": {
+                "entityID": {
+                  "type": "string", "enum": ["InfinityStones"]
+                },
+                "ID": {
+                  "type": "integer"
+                }
+              },
+              "additionalProperties": false,
+              "minProperties": 2
+            },
+            "customContent": { "type": "object" }
+          },
+          "required": ["requestType"]
+        }
+      ]
+    }
+  },
+  "type":"object",
+  "oneOf":[
+    {
+      "type":"object",
+      "properties":{
+        "messageType":{
+          "const":"HELLO_SERVER"
+        },
+        "name":{
+          "type":"string"
+        },
+        "deviceID":{
+          "type":"string"
+        }
+      },
+      "required":[
+        "messageType",
+        "name",
+        "deviceID"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type":"object",
+      "properties":{
+        "messageType":{
+          "const":"HELLO_CLIENT"
+        },
+        "runningGame":{
+          "type":"boolean"
+        }
+      },
+      "required":[
+        "messageType",
+        "runningGame"
+      ]
+    },
+    {
+      "type":"object",
+      "properties":{
+        "messageType":{
+          "const":"RECONNECT"
+        },
+        "reconnect":{
+          "type":"boolean"
+        }
+      },
+      "required":[
+        "messageType",
+        "reconnect"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type":"object",
+      "properties":{
+        "messageType":{
+          "const":"PLAYER_READY"
+        },
+        "startGame":{
+          "type":"boolean"
+        },
+        "role":{
+          "type":"string",
+          "enum":[
+            "PLAYER",
+            "KI",
+            "SPECTATOR"
+          ]
+        }
+      },
+      "required":[
+        "messageType",
+        "startGame",
+        "role"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type":"object",
+      "properties":{
+        "messageType":{
+          "const":"GAME_ASSIGNMENT"
+        },
+        "gameID":{
+          "type":"string"
+        },
+        "characterSelection":{
+          "type":"array",
+          "uniqueItems":true,
+          "title":"characterArray",
+          "minItems":12,
+          "maxItems":12,
+          "description":"Das Array an Character Descriptions",
+          "items":{
+            "$ref":"#/definitions/oneCharacter"
+          }
+        }
+      },
+      "required":[
+        "messageType",
+        "gameID",
+        "characterSelection"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type":"object",
+      "properties":{
+        "messageType":{
+          "const":"GENERAL_ASSIGNMENT"
+        },
+        "gameID":{
+          "type":"string"
+        }
+      },
+      "required":[
+        "messageType",
+        "gameID"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type":"object",
+      "properties":{
+        "messageType":{
+          "const":"CHARACTER_SELECTION"
+        },
+        "characters":{
+          "type":"array",
+          "minItems":12,
+          "maxItems":12,
+          "items":{
+            "type":"boolean"
+          }
+        }
+      },
+      "required":[
+        "messageType",
+        "characters"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type":"object",
+      "properties":{
+        "messageType":{
+          "const":"CONFIRM_SELECTION"
+        },
+        "selectionComplete":{
+          "type":"boolean"
+        }
+      },
+      "required":[
+        "messageType",
+        "selectionComplete"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type":"object",
+      "properties":{
+        "messageType":{
+          "const":"GAME_STRUCTURE"
+        },
+        "assignment":{
+          "type":"string",
+          "enum":[
+            "PlayerOne",
+            "PlayerTwo",
+            "Spectator"
+          ]
+        },
+        "playerOneName":{
+          "type":"string"
+        },
+        "playerTwoName":{
+          "type":"string"
+        },
+        "playerOneCharacters":{
+          "type":"array",
+          "uniqueItems":true,
+          "title":"characterArray",
+          "minItems":6,
+          "maxItems":6,
+          "description":"Das Array an Character Descriptions",
+          "items":{
+            "$ref":"#/definitions/oneCharacter"
+          }
+        },
+        "playerTwoCharacters":{
+          "type":"array",
+          "uniqueItems":true,
+          "title":"characterArray",
+          "minItems":6,
+          "maxItems":6,
+          "description":"Das Array an Character Descriptions",
+          "items":{
+            "$ref":"#/definitions/oneCharacter"
+          }
+        },
+        "scenarioconfig":{
+          "$ref":"#/definitions/scenarioconfig"
+        },
+        "matchconfig":{
+          "$ref":"#/definitions/matchconfig"
+        }
+      },
+      "required":[
+        "messageType",
+        "assignment",
+        "playerOneName",
+        "playerTwoName",
+        "playerOneCharacters",
+        "playerTwoCharacters",
+        "scenarioconfig",
+        "matchconfig"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type":"object",
+      "properties":{
+        "messageType":{
+          "const":"GOODBYE_ClIENT"
+        },
+        "message":{
+          "type":"string"
+        }
+      },
+      "required":[
+        "messageType",
+        "message"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type":"object",
+      "properties":{
+        "messageType":{
+          "const":"ERROR"
+        },
+        "message":{
+          "type":"string"
+        },
+        "type":{
+          "type":"integer"
+        }
+      },
+      "required":[
+        "messageType",
+        "message",
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "properties":{
+        "characters":{
+          "type":"array",
+          "uniqueItems":true,
+          "title":"characterArray",
+          "minItems":24,
+          "description":"Das Array an Character Descriptions",
+          "items":{
+            "$ref":"#/definitions/oneCharacter"
+          }
+        }
+      },
+      "required":[
+        "characters"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "$ref":"#/definitions/matchconfig"
+    },
+    {
+      "$ref":"#/definitions/scenarioconfig"
+    },
+    {
+      "type":"object",
+      "properties":{
+        "messageType":{
+          "const":"EVENTS"
+        },
+        "messages":{
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/event"
+          }
+        }
+      },
+      "required":[
+        "messageType",
+        "messages"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type":"object",
+      "properties":{
+        "messageType":{
+          "const":"REQUESTS"
+        },
+        "messages":{
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/request"
+          }
+        }
+      },
+      "required":[
+        "messageType",
+        "messages"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

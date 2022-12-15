@@ -1,0 +1,166 @@
+{
+  "characters": [
+    {
+      "name": "Thomas Thuem",
+      "HP": 100,
+      "MP": 2,
+      "AP": 2,
+      "meleeDamage": 10,
+      "rangeCombatDamage": 30,
+      "rangeCombatReach": 5
+    },
+    {
+      "name": "Florian Ege",
+      "HP": 100,
+      "MP": 6,
+      "AP": 1,
+      "meleeDamage": 10,
+      "rangeCombatDamage": 10,
+      "rangeCombatReach": 3
+    },
+    {
+      "name": "Nico Brenner",
+      "HP": 100,
+      "MP": 2,
+      "AP": 2,
+      "meleeDamage": 10,
+      "rangeCombatDamage": 30,
+      "rangeCombatReach": 5
+    },
+    {
+      "name": "Ruben Dunkel",
+      "HP": 100,
+      "MP": 6,
+      "AP": 1,
+      "meleeDamage": 10,
+      "rangeCombatDamage": 10,
+      "rangeCombatReach": 3
+    },
+    {
+      "name": "Lucas Gmuender",
+      "HP": 100,
+      "MP": 6,
+      "AP": 1,
+      "meleeDamage": 10,
+      "rangeCombatDamage": 10,
+      "rangeCombatReach": 3
+    },
+    {
+      "name": "Johannes Herschel",
+      "HP": 100,
+      "MP": 2,
+      "AP": 2,
+      "meleeDamage": 10,
+      "rangeCombatDamage": 30,
+      "rangeCombatReach": 5
+    },
+    {
+      "name": "Dennis Jehle",
+      "HP": 100,
+      "MP": 6,
+      "AP": 1,
+      "meleeDamage": 10,
+      "rangeCombatDamage": 10,
+      "rangeCombatReach": 3
+    },
+    {
+      "name": "Jasmin Klassen",
+      "HP": 100,
+      "MP": 2,
+      "AP": 2,
+      "meleeDamage": 10,
+      "rangeCombatDamage": 30,
+      "rangeCombatReach": 5
+    },
+    {
+      "name": "Jakob Meyer-Hilberg",
+      "HP": 100,
+      "MP": 6,
+      "AP": 1,
+      "meleeDamage": 10,
+      "rangeCombatDamage": 10,
+      "rangeCombatReach": 3
+    },
+    {
+      "name": "Justin Muecke",
+      "HP": 100,
+      "MP": 6,
+      "AP": 1,
+      "meleeDamage": 10,
+      "rangeCombatDamage": 10,
+      "rangeCombatReach": 3
+    },
+    {
+      "name": "Felix Nagel",
+      "HP": 100,
+      "MP": 2,
+      "AP": 2,
+      "meleeDamage": 10,
+      "rangeCombatDamage": 30,
+      "rangeCombatReach": 5
+    },
+    {
+      "name": "Timo Netzer",
+      "HP": 100,
+      "MP": 6,
+      "AP": 1,
+      "meleeDamage": 10,
+      "rangeCombatDamage": 10,
+      "rangeCombatReach": 3
+    },
+    {
+      "name": "Theo Nonnenmacher",
+      "HP": 100,
+      "MP": 2,
+      "AP": 2,
+      "meleeDamage": 10,
+      "rangeCombatDamage": 30,
+      "rangeCombatReach": 5
+    },
+    {
+      "name": "Dominik Rollenmiller",
+      "HP": 100,
+      "MP": 6,
+      "AP": 1,
+      "meleeDamage": 10,
+      "rangeCombatDamage": 10,
+      "rangeCombatReach": 3
+    },
+    {
+      "name": "Pascal Schiessle",
+      "HP": 100,
+      "MP": 6,
+      "AP": 1,
+      "meleeDamage": 10,
+      "rangeCombatDamage": 10,
+      "rangeCombatReach": 3
+    },
+    {
+      "name": "Bastian Wankmueller",
+      "HP": 100,
+      "MP": 2,
+      "AP": 2,
+      "meleeDamage": 10,
+      "rangeCombatDamage": 30,
+      "rangeCombatReach": 5
+    },
+    {
+      "name": "Tim Wibiral",
+      "HP": 100,
+      "MP": 6,
+      "AP": 1,
+      "meleeDamage": 10,
+      "rangeCombatDamage": 10,
+      "rangeCombatReach": 3
+    },
+    {
+      "name": "Timo Zuccarello",
+      "HP": 100,
+      "MP": 2,
+      "AP": 2,
+      "meleeDamage": 10,
+      "rangeCombatDamage": 30,
+      "rangeCombatReach": 5
+    }
+  ]
+}

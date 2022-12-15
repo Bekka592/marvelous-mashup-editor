@@ -1,92 +1,99 @@
 # Marvelous Mashup Editor
 
+Editor to configure a match of "Marvelous Mashup".
+The game was created as part of a group software project at Ulm University and in total consists of a server, a client, an AI-client and an editor.
+I focussed on creating the editor component, where I was supported by the "util" and "ui-util" packages by Constanze and Simon.
+The editor was finally promoted and "sold" very successfully to the other teams.
+The following is the component's manual in German:
 
+## Installation und Bedienung
 
-## Getting started
+### Systemanforderungen
+- Java 15
+- Die Anwendung läuft sicher unter Windows 10. Wir haben keine Windows spezifischen Features genutzt, weshalb
+  sie auf Linux eigentlich auch laufen sollte, aber das können wir leider nicht zu 100% garantieren.
+- Gradle 7 wird mitgeliefert, jedoch kommt es gelegentlich zu Problemen, wenn man lokal noch zusätzlich eine ältere Gradle Version installiert hat.
+Falls sich Gradle also beschwert, kann es helfen die lokale Version zu updaten oder einfach zu entfernen.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+### Anwendung ausführen
+Klont euch dafür das Repository und öffnet den Ordner [SoftwareProjektTeam29](../SoftwareProjektTeam29) mit einer IDE eurer Wahl.
+Dann könnt ihr über das Gradle Menü und  _launcher > tasks > execution > startEditor_ beziehungsweise über das Terminal
+unter Windows mittels `gradlew.bat launcher:startEditor` die Anwendung ausführen.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+### Unit Tests laufen lassen
+Die JUnit Tests können mittels `gradlew.bat test` bzw `gradlew.bat cleanTest test` ausgeführt werden, oder
+aber über die Gradle Task `SoftwareProjektTeam29 > Tasks > verification > test` im Gradle Menü.
+Zusätzlich haben wir auch Jacoco integriert. Das könnt ihr gerne ebenfalls nutzen, oder einfach raus tun, falls ihr es nicht benötigt.
 
-## Add your files
+### Sonstiges
+- Zum Video: die FileChooser wurden leider von OBS nicht richtig aufgenommen, aber stellt euch einfach vor da wären FileChooser
+  zu sehen gewesen :D
+- Ihr könnt euch jederzeit selbst JARs erstellen: Dazu müsst ihr den Gradle-Task _SoftwareProjektTeam29 > Tasks > shadow > shadownJar_
+ausführen. Die Jar ist dann unter _SoftwareProjektTeam29/launcher/build/libs/marvelousmashup.jar_ zu finden.
+- Es kann gut sein, dass es zu Bugs in der UI kommt, wenn ihr bei Windows eine Skalierung von über 100% eingestellt habt. Da das aber unseres Wissens
+nach kaum jemand nutzt, haben wir uns diesem Problem bislang noch nicht gewidmet. Wenn das doch für mehrere Leute
+  ein Problem sein sollte, können wir gerne noch einen Bugfix hinterher schicken.
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+## Anwendung und Personalisierung
+- In der Klasse [ParameterSpecifications](../SoftwareProjektTeam29/editor/src/main/java/marvelous_mashup/team29/editor/model/ParameterSpecifications.java)
+  können die zugelassenen Parameterwerte, sowie die Richtwerte für zufallsgenerierten Konfigurationen angepasst werden.
+- Weitere Charaktere, die euer Editor zusätzlich zu den 24 Standard-Charakteren unterstützen soll, können dem
+  [SupportedCharactersEnum](../SoftwareProjektTeam29/editor/src/main/java/marvelous_mashup/team29/editor/model/SupportedCharactersEnum.java)
+  hinzugefügt werden.
+- In der Klasse [AbstractGameWithMusic](../SoftwareProjektTeam29/ui-util/src/main/java/marvelous_mashup/team29/ui_util/AbstractGameWithMusic.java)
+  können die Basis-Werte für die Lautstärke der Sounds angepasst werden.
+- In den Klassen [ColorEnum](../SoftwareProjektTeam29/ui-util/src/main/java/marvelous_mashup/team29/ui_util/options/ColorEnum.java) und
+  [EditorDefaults](../SoftwareProjektTeam29/ui-util/src/main/java/marvelous_mashup/team29/ui_util/styling/EditorDefaults.java)
+  können die Farben der Anwendung angepasst werden. Gerne könnt ihr auch weitere Defaults erstellen. Diese müssen dann ebenfalls von
+  [IContainDefaults](../SoftwareProjektTeam29/ui-util/src/main/java/marvelous_mashup/team29/ui_util/styling/IContainDefaults.java)
+  erben.
+- Die generellen Styling-Defaults können durch das Anpassen der Konstanten in
+  [ComponentsSizeEnum](../SoftwareProjektTeam29/ui-util/src/main/java/marvelous_mashup/team29/ui_util/options/ComponentsSizeEnum.java),
+  [TextStyleEnum](../SoftwareProjektTeam29/ui-util/src/main/java/marvelous_mashup/team29/ui_util/options/TextStyleEnum.java),
+  [TextSizeEnum](../SoftwareProjektTeam29/ui-util/src/main/java/marvelous_mashup/team29/ui_util/options/TextSizeEnum.java) und
+  [UIConstants](../SoftwareProjektTeam29/ui-util/src/main/java/marvelous_mashup/team29/ui_util/UIConstants.java) geändert werden.
+- Das Styling von UI-Komponenten (Buttons etc) kann nach Belieben in [ComponentCreator](../SoftwareProjektTeam29/ui-util/src/main/java/marvelous_mashup/team29/ui_util/styling/ComponentCreator.java)
+genutzt und angepasst werden.
 
-```
-cd existing_repo
-git remote add origin https://gitlab.com/Maffel/marvelous-mashup-editor.git
-git branch -M main
-git push -uf origin main
-```
+## Code Struktur
 
-## Integrate with your tools
+Generell nutzen wir modul-übergreifend überall LibGdx in Version LWJGL3.
 
-- [ ] [Set up project integrations](https://gitlab.com/Maffel/marvelous-mashup-editor/-/settings/integrations)
+### [Asset Modul](../SoftwareProjektTeam29/assets)
+Hier sind all unsere Texturen, Sounds und co gespeichert. Diese könnt ihr nach Belieben zu euren eigenen abändern.
+Vielen Dank an Vanessa Güntzel für die Grafiken der Charaktere.
 
-## Collaborate with your team
+### [Launcher Modul](../SoftwareProjektTeam29/launcher/src/main/java/marvelous_mashup/team29/launcher)
+Dieses Modul hat lediglich die Aufgabe die LibGdx Anwendung zu starten und dabei die Startparameter angemessen zu konfigurieren.
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+### [Editor Modul](../SoftwareProjektTeam29/editor/src/main/java/marvelous_mashup/team29/editor)
+- Greift auf die Funktionalitäten von UI-Util und Util zurück. Nutzt außerdem Gson.
+- Hier ist die wesentliche Funktionalität des Editors gelagert.
+- Die [Editor](../SoftwareProjektTeam29/editor/src/main/java/marvelous_mashup/team29/editor/Editor.java) Klasse kümmert sich um
+das generelle Management der Screens.
+- Die Klassen [CharacterConfigScreen](../SoftwareProjektTeam29/editor/src/main/java/marvelous_mashup/team29/editor/gui/config_screens/CharacterConfigScreen.java),
+  [MatchConfigScreen](../SoftwareProjektTeam29/editor/src/main/java/marvelous_mashup/team29/editor/gui/config_screens/MatchConfigScreen.java)
+  und [ScenarioConfigScreen](../SoftwareProjektTeam29/editor/src/main/java/marvelous_mashup/team29/editor/gui/config_screens/ScenarioConfigScreen.java)
+  bilden zusammen im Wechselspiel mit [CharacterConfigLogic](../SoftwareProjektTeam29/editor/src/main/java/marvelous_mashup/team29/editor/logic/CharacterConfigLogic.java),
+  [MatchConfigLogic](../SoftwareProjektTeam29/editor/src/main/java/marvelous_mashup/team29/editor/logic/MatchConfigLogic.java)
+  und [ScenarioConfigLogic](../SoftwareProjektTeam29/editor/src/main/java/marvelous_mashup/team29/editor/logic/ScenarioConfigLogic.java)
+  die zentralen Punkte der Konfigurationsbildschirme.
+- Um das Parsing nachzuvollziehen, lohnt es sich vor allen, sich die Klasse [FileIOLogic](../SoftwareProjektTeam29/editor/src/main/java/marvelous_mashup/team29/editor/logic/parsing/FileIOLogic.java)
+anzuschauen.
 
-## Test and Deploy
+### [UI-Util Modul](../SoftwareProjektTeam29/ui-util/src/main/java/marvelous_mashup/team29/ui_util)
+- Nutzt die Funktionen des Util Moduls.
+- Dieses Modul enthält alle UI-Funktionalitäten, die der Editor benötigt. Hier wird unser eigener Skin,
+  der Marvel Style, erstellt und es werden abstrakte Screens und Komponenten bereitgestellt, damit alle darauf
+  basierenden Anwendungen den Style unkompliziert nutzen können.
+- Mittels dem [ComponentCreator](../SoftwareProjektTeam29/ui-util/src/main/java/marvelous_mashup/team29/ui_util/styling/ComponentCreator.java)
+können verschiedenste UI-Elemente erstellt werden.
+- All unsere Screens erben von [AbstractScreen](../SoftwareProjektTeam29/ui-util/src/main/java/marvelous_mashup/team29/ui_util/screens/AbstractScreen.java),
+welcher das Design vereinheitlicht und die Komplexität eines LibGdx Screens verbirgt.
 
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+### [Util Modul](../SoftwareProjektTeam29/util/src/main/java/marvelous_mashup/team29/util)
+- Nutzt Justify zur Validierung von JSON Dateien mit einem Schema.
+- Dieses Modul enthält alle, nicht GUI bezogenen, Hilfsfunktionen für den Editor.
+- So befindet sich hier zum Beispiel unser [AssetLoader](../SoftwareProjektTeam29/util/src/main/java/marvelous_mashup/team29/util/asset_loader/AssetFinder.java),
+der nach Belieben um zusätzliche Dateien erweitert werden kann.
+- Auch die Logik der Map und grundlegende JSON/File-Funktionalitäten sind hier zu finden.
